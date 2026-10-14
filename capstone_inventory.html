@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Product Inventory & Analytics</title>
+</head>
+
+<body>
+    <h2>Interactive Product Inventory & Analytics Dashboard</h2>
+    <p>This is a console-based mini project. Open F12 → Console. Refresh the page to run it again.</p>
+    <script>
+        console.log("--- Initializing Inventory System ---");
+
+        const inventory = [
+            { name: "Laptop", price: 800 },
+            { name: "Mouse", price: 25 }
+        ];
+
+        const productNameInput = prompt("Enter new product name:", "Monitor");
+        const productPriceInput = prompt("Enter product price:", "150");
+        const productPrice = Number(productPriceInput);
+
+        if (productNameInput === null || productPriceInput === null ||
+            productNameInput.trim() === "" || productPriceInput.trim() === "" ||
+            !Number.isFinite(productPrice) || productPrice < 0) {
+            console.log("Invalid product details. New product was not added.");
+        } else {
+            inventory.push({
+                name: productNameInput.trim(),
+                price: productPrice
+            });
+            console.log(`[Prompt executed: User adds "${productNameInput.trim()}" at "$${productPrice}"]`);
+        }
+
+        function getCategory(price) {
+            if (price < 50) {
+                return "Budget";
+            } else if (price < 200) {
+                return "Standard";
+            } else {
+                return "Premium";
+            }
+        }
+
+        const getTotalValue = items =>
+            items.reduce((total, item) => total + item.price, 0);
+
+        const applyAdjustment = (amount, rate = 0) => amount + amount * rate / 100;
+
+        console.log("--- Processing Inventory Roster (forEach) ---");
+        inventory.forEach(item => {
+            let category;
+            switch (getCategory(item.price)) {
+                case "Budget":
+                    category = "Budget";
+                    break;
+                case "Standard":
+                    category = "Standard";
+                    break;
+                default:
+                    category = "Premium";
+            }
+            console.log(`* Item: ${item.name} ($${item.price}) -> Category: ${category}`);
+        });
+
+        console.log("--- Financial Analytics ---");
+        console.log(`Total Inventory Value: $${getTotalValue(inventory)}`);
+
+        const affordableItems = inventory.filter(item => item.price < 200);
+        console.log(`Filtered Affordable Items (Under $200): ${JSON.stringify(affordableItems.map(item => item.name))}`);
+
+        const reportList = inventory.map(item => `${item.name.toUpperCase()}: $${item.price}`);
+        console.log("Formatted Report List:", reportList);
+
+        const totalWithTax = applyAdjustment(getTotalValue(inventory), 5);
+        console.log(`Total Inventory Value with 5% tax: $${totalWithTax}`);
+    </script>
+</body>
+
+</html>
